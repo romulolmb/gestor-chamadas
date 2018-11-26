@@ -6,7 +6,7 @@
 	<artifactId>sistema</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
-	<name>Sistema</name>
+	<name>Sistema de Gestor de Chamadas</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -159,6 +159,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>sistema</finalName>
+		<finalName>sistema-gestor-chamadas</finalName>
 	</build>
 </project>
