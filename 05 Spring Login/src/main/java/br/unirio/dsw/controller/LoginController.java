@@ -63,6 +63,9 @@ public class LoginController
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String mostraPaginaLogin()
 	{
+		/*boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+		if (isAuthenticated)
+			return "redirect:/homepage";*/
 		return "login/index";
 	}
 
