@@ -1,7 +1,7 @@
 app.controller("formController", function ($log, $location, $http, NgTableParams, unidadeService) {
 	var self = this;
 
-	/*
+	/**
 	 * Filtros
 	 */
 	self.unidade = unidadeService.getUnidade();
