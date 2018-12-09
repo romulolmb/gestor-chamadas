@@ -18,7 +18,6 @@ app.controller("formController", function ($log, $location, $http, NgTableParams
 	}, 100);
 
 	self.salva = function() {
-/*		self.unidade.gestores = [];*/
 		$http.post("unidade", self.unidade).then(function(data) {
 			if (data.data.result == "OK") {
 				M.toast({html: "Unidade funcional salva com sucesso!"});
@@ -33,15 +32,29 @@ app.controller("formController", function ($log, $location, $http, NgTableParams
         $location.path('/lista');
 	}
 	
+	/**
+	 * Remove um gestor da lista
+	 */
 	self.removeGestor = function(id) {
-		
+		var index = self.unidade.gestores.indexOf(id);
+		if (index >= 0) self.unidade.gestores.splice(index, 1);
 	}
 	
+	/**
+	 * Adiciona um gestor na lista
+	 */
 	self.adicionaUsuarioGestor = function(resumo) {
-		
+		var possoAdicionar = true;
+		for(i = 0; i < self.unidade.gestores.length; i++){
+			if (resumo.id == self.unidade.gestores[i].id){
+				possoAdicionar = false;
+				break;
+			}
+		}
+		if (possoAdicionar) self.unidade.gestores.push(resumo);
 	}
 	
-	/*
+	/**
 	 * Prepara a tabela
 	 */
 	self.tableGestores = new NgTableParams({}, {

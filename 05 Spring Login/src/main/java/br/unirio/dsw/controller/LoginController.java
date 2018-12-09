@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -63,9 +64,11 @@ public class LoginController
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String mostraPaginaLogin()
 	{
-		/*boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-		if (isAuthenticated)
-			return "redirect:/homepage";*/
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if (auth.isAuthenticated() && auth.getName().compareTo("anonymousUser") != 0)
+			return "redirect:/homepage";
+
 		return "login/index";
 	}
 
@@ -141,7 +144,7 @@ public class LoginController
             return "/login/create";
 
         String encodedPassword = passwordEncoder.encode(form.getSenha());
-        Usuario user = new Usuario(form.getNome(), form.getEmail(), encodedPassword, false);
+        Usuario user = new Usuario(form.getNome(), form.getEmail(), encodedPassword, false, false);
         userDAO.criaNovoUsuario(user);
  
         UsernamePasswordAuthenticationToken authentication=new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());

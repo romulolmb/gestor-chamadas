@@ -43,9 +43,9 @@ public class Usuario extends User implements UserDetails
 	/**
 	 * Inicializa um usuário
 	 */
-	public Usuario(String nome, String email, String senha, boolean bloqueado)
+	public Usuario(String nome, String email, String senha, boolean bloqueado, boolean administrador)
 	{
-        super(email, senha, true, true, true, !bloqueado, createAuthoritiesFromBasicRole());
+        super(email, senha, true, true, true, !bloqueado, createAuthoritiesFromBasicRole(administrador));
 		this.id = -1;
 		this.nome = nome;
 		this.tokenLogin = "";
@@ -53,7 +53,7 @@ public class Usuario extends User implements UserDetails
 		this.contadorFalhasLogin = 0;
 		this.dataUltimoLogin = null;
 		this.bloqueado = bloqueado;
-		this.administrador = false;
+		this.administrador = administrador;
 		this.providerId = "";
 		this.providerUserId = "";
 		this.profileUrl = "";
@@ -67,11 +67,15 @@ public class Usuario extends User implements UserDetails
 	/**
 	 * Cria os direitos de acesso relacionado ao papel básico do usuário
 	 */
-	private static Set<GrantedAuthority> createAuthoritiesFromBasicRole()
+	private static Set<GrantedAuthority> createAuthoritiesFromBasicRole(boolean administrador)
 	{
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_BASIC"));
-		return authorities;
+        
+        if (administrador)
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
+        return authorities;
 	}
 	
 	/**

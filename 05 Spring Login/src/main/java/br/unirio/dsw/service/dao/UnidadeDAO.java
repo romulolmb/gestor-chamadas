@@ -27,11 +27,12 @@ public class UnidadeDAO extends AbstractDAO
 	 */
 	private Unidade carrega(ResultSet rs) throws SQLException
 	{
-		Unidade user = new Unidade();
-		user.setId(rs.getInt("id"));
-		user.setSigla(rs.getString("sigla"));
-		user.setNome(rs.getString("nome"));
-		return user;
+		Unidade unidade = new Unidade();
+		unidade.setId(rs.getInt("id"));
+		unidade.setSigla(rs.getString("sigla"));
+		unidade.setNome(rs.getString("nome"));
+		carregaGestores(unidade);
+		return unidade;
 	}
 
 	/**
@@ -152,7 +153,7 @@ public class UnidadeDAO extends AbstractDAO
 			cs.registerOutParameter(3, Types.INTEGER);
 			cs.execute();
 			
-			adicionaGestores(c, unidade);
+			adicionaGestores(unidade);
 			unidade.setId(cs.getInt(3));
 			
 			c.close();
@@ -183,8 +184,8 @@ public class UnidadeDAO extends AbstractDAO
 			cs.setString(3, unidade.getSigla());
 			cs.execute();
 			
-			removeGestores(c, unidade.getId());
-			adicionaGestores(c, unidade);
+			removeGestores(unidade.getId());
+			adicionaGestores(unidade);
 
 			c.close();
 			return true;
@@ -228,7 +229,7 @@ public class UnidadeDAO extends AbstractDAO
 	{
 		String SQL = "SELECT u.id, u.nome " +
 					 "FROM GestorUnidadeFuncional g " +
-					 "INNER JOIN Usuario u ON g.idUsuario = u.id " +
+					 "INNER JOIN Usuario u ON g.idGestor = u.id " +
 					 "WHERE g.idUnidade = ?";
 		
 		Connection c = getConnection();
@@ -262,17 +263,18 @@ public class UnidadeDAO extends AbstractDAO
 	/**
 	 * Adiciona os gestores em uma unidade
 	 */
-	private void adicionaGestores(Connection c, Unidade unidade) throws SQLException
+	private void adicionaGestores(Unidade unidade) throws SQLException
 	{
 		for (GestorUnidade gestor : unidade.pegaGestores())
-			adicionaGestor(c, unidade.getId(), gestor.getId());
+			adicionaGestor(unidade.getId(), gestor.getId());
 	}
 
 	/**
 	 * Adiciona um gestor em uma unidade
 	 */
-	private void adicionaGestor(Connection c, int idUnidade, int idUsuario) throws SQLException
+	private void adicionaGestor(int idUnidade, int idUsuario) throws SQLException
 	{
+		Connection c = getConnection();
 		CallableStatement cs = c.prepareCall("{call UnidadeFuncionalAssociaGestor(?, ?)}");
 		cs.setInt(1, idUnidade);
 		cs.setInt(2, idUsuario);
@@ -283,8 +285,9 @@ public class UnidadeDAO extends AbstractDAO
 	/**
 	 * Remove todos os gestores de uma unidade
 	 */
-	private void removeGestores(Connection c, int idUnidade) throws SQLException
+	private void removeGestores(int idUnidade) throws SQLException
 	{
+		Connection c = getConnection();
 		CallableStatement cs = c.prepareCall("{call UnidadeFuncionalDesassociaGestores(?)}");
 		cs.setInt(1, idUnidade);
 		cs.execute();

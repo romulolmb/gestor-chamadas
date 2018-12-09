@@ -33,14 +33,14 @@ public class UsuarioDAO extends AbstractDAO
 		String email = rs.getString("email");
 		String senha = rs.getString("senha");
 		boolean bloqueado = rs.getInt("bloqueado") != 0;
+		boolean administrador = rs.getInt("administrador") != 0;
 
-		Usuario user = new Usuario(nome, email, senha, bloqueado);
+		Usuario user = new Usuario(nome, email, senha, bloqueado, administrador);
 		user.setId(rs.getInt("id"));
 		user.setDataUltimoLogin(DateUtils.toDateTime(rs.getTimestamp("dataUltimoLogin")));
 		user.setContadorFalhasLogin(rs.getInt("falhasLogin"));
 		user.setTokenLogin(rs.getString("tokenSenha"));
 		user.setDataTokenLogin(DateUtils.toDateTime(rs.getTimestamp("dataTokenSenha")));
-		user.setAdministrador(rs.getInt("administrador") != 0);
 		user.setProviderId(rs.getString("providerId"));
 		user.setProviderUserId(rs.getString("providerUserId"));
 		user.setProfileUrl(rs.getString("profileUrl"));

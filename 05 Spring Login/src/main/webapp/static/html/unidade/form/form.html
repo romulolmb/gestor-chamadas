@@ -59,7 +59,7 @@
 					           		{{ item.nome }}
 					           	</td>
 								<td class="right">
-									<button class="waves-effect waves-light btn customAction" data-ng-click="ctrl.removeGestor(item.id)">
+									<button class="waves-effect waves-light btn customAction" data-ng-click="ctrl.removeGestor(item)">
 										<i class="material-icons">delete</i>
 									</button>
 								</td>
@@ -71,7 +71,7 @@
 					</div>
 				</div>
 
-			  	<seletor-usuarios on-select="ctrl.adicionaUsuarioGestor" modal-name="'usuarioGestorModal'" title="'Selecione um novo gestor'"></seletor-individuos>
+			  	<seletor-usuarios on-select="ctrl.adicionaUsuarioGestor" modal-name="'usuarioGestorModal'" title="'Selecione um novo gestor'"></seletor-usuarios>
 			</div>
 				
 	        <div class="card-action text-right">

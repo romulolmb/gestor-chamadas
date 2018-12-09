@@ -17,4 +17,9 @@ public @Data class GestorUnidade
 		this.id = id;
 		this.nome = nome;
 	}
+
+	public GestorUnidade()
+	{
+		this(-1, "");
+	}
 }

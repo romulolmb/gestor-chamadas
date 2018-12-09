@@ -4,7 +4,10 @@
 	<br/>
 	<br/>
 	<h3>Esta é a sua homepage.</h3>
-	<a href="unidade">Gerenciar Unidades</a>
+	
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<a href="unidade">Gerenciar Unidades</a>
+	</sec:authorize>
 	<br/>
 	<br/>
 	<br/>

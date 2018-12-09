@@ -16,7 +16,7 @@ public class Unidade
 	private @Setter @Getter int id;
 	private @Setter @Getter String sigla;
 	private @Setter @Getter String nome;
-	private List<GestorUnidade> gestores;
+	private @Setter List<GestorUnidade> gestores;
 
 	/**
 	 * Inicializa uma unidade
