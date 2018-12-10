@@ -9,19 +9,19 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import br.unirio.dsw.model.chamada.CampoChamada;
 import br.unirio.dsw.model.chamada.Chamada;
-import br.unirio.dsw.model.unidade.GestorUnidade;
-import br.unirio.dsw.model.unidade.Unidade;
 import br.unirio.dsw.utils.DateUtils;
+
+
 /**
  * Classe responsavel pela 
  * 
  * @author Mlandrini
  */
-@Service("chamadaDAO")
 public class ChamadaDAO extends AbstractDAO
 {	
 	/**
@@ -53,11 +53,15 @@ public class ChamadaDAO extends AbstractDAO
 		int tipo = rs.getInt("tipo");
 		int decimais = rs.getInt("decimais");
 		boolean opcional = rs.getInt("opcional") != 0;
-		// TODO tratar as opçoes
 		CampoChamada campo = new CampoChamada(id, titulo, tipo, decimais, opcional);
+		
+		Gson gson = new Gson();
+		ArrayList<String> listaOpcoes = gson.fromJson(rs.getString("jsonOpcoes"), new TypeToken<ArrayList<String>>(){}.getType());
+		for(String opcao: listaOpcoes)
+			campo.adicionaOpcao(opcao);
 		return campo;
 	}
-
+	
 	/**
 	 * Carrega uma chamada, dado seu identificador
 	 */
@@ -145,7 +149,7 @@ public class ChamadaDAO extends AbstractDAO
 	public List<Chamada> lista(int pagina, int tamanhoPagina, String filtroNome, String filtroSigla)
 	{
 		String SQL = "SELECT * " +
-					 "FROM UnidadeFuncional " + 
+					 "FROM Chamada " + 
 					 "WHERE nome like ? " +
 					 "AND sigla like ? " + 
 					 "LIMIT ? OFFSET ? ";
@@ -194,14 +198,17 @@ public class ChamadaDAO extends AbstractDAO
 		
 		try
 		{
-			CallableStatement cs = c.prepareCall("{call ChamadaInsere(?, ?, ?)}");
-			cs.setString(1, chamada.getNome());
-			cs.setString(2, chamada.getSigla());
-			cs.registerOutParameter(3, Types.INTEGER);
+			CallableStatement cs = c.prepareCall("{call ChamadaInsere(?, ?, ?, ?, ?, ?)}");
+			cs.setInt(1, chamada.getIdUnidade());
+			cs.setString(2, chamada.getNome());
+			cs.setString(3, chamada.getSigla());
+			cs.setString(4, chamada.getDataAbertura().toString());
+			cs.setString(5, chamada.getDataEncerramento().toString());
+			cs.registerOutParameter(6, Types.INTEGER);
 			cs.execute();
 			
-			adicionaCamposChamada(c, chamada);
-			chamada.setId(cs.getInt(3));
+			chamada.setId(cs.getInt(6));
+			adicionaCampos(c, chamada);
 			
 			c.close();
 			return true;
@@ -225,14 +232,16 @@ public class ChamadaDAO extends AbstractDAO
 		
 		try
 		{
-			CallableStatement cs = c.prepareCall("{call ChamadaAtualiza(?, ?, ?)}");
+			CallableStatement cs = c.prepareCall("{call ChamadaAtualiza(?, ?, ?, ?, ?)}");
 			cs.setInt(1, chamada.getId());
 			cs.setString(2, chamada.getNome());
 			cs.setString(3, chamada.getSigla());
+			cs.setString(4, chamada.getDataAbertura().toString());
+			cs.setString(5, chamada.getDataEncerramento().toString());
 			cs.execute();
 			
-			removeCamposChamada(c, chamada.getId());
-			adicionaCamposChamada(c, chamada);
+			removeCampos(c, chamada);
+			adicionaCampos(c, chamada);
 
 			c.close();
 			return true;
@@ -268,36 +277,109 @@ public class ChamadaDAO extends AbstractDAO
 			return false;
 		}
 	}
+	
+	/**
+	 * Encerra uma chamada
+	 */
+	public boolean encerra(int idChamada)
+	{
+		Connection c = getConnection();
+		
+		if (c == null)
+			return false;
+		
+		try
+		{
+			CallableStatement cs = c.prepareCall("{call ChamadaEncerra(?)}");
+			cs.setInt(1, idChamada);
+			cs.execute();
+			c.close();
+			return true;
 
+		} catch (SQLException e)
+		{
+			log("ChamadaDAO.encerra: " + e.getMessage());
+			return false;
+		}
+	}
+	
 	/**
 	 * Adiciona os campos em uma chamada
 	 */
-	private void adicionaCamposChamada(Connection c, Chamada chamada) throws SQLException
+	private void adicionaCampos(Connection c, Chamada chamada) throws SQLException
 	{
-		for (CampoChamada campoChamada: chamada.pegaCamposChamada()) {
-			adicionaCampoChamada(c, chamada.getId(), campoChamada.getId());
-		}
+		for (CampoChamada campoChamada: chamada.pegaCamposChamada())
+			adicionaCampo(c, chamada.getId(), campoChamada);
 	}
+
 	/**
-	 * Adiciona um campo em uma chamada
+	 * Adiciona um campo em uma unidade
 	 */
-	private void adicionaCampoChamada(Connection c, int idUnidade, int idUsuario) throws SQLException
+	private void adicionaCampo(Connection c, int idChamada, CampoChamada campoChamada) throws SQLException
 	{
-		CallableStatement cs = c.prepareCall("{call UnidadeFuncionalAssociaGestor(?, ?)}");
-		cs.setInt(1, idUnidade);
-		cs.setInt(2, idUsuario);
+		CallableStatement cs = c.prepareCall("{call CampoChamadaInsere(?, ?, ?, ?, ?, ?, ?)}");
+		cs.setInt(1, idChamada);
+		cs.setString(2, campoChamada.getTitulo());
+		cs.setInt(3, campoChamada.getTipo());
+		cs.setInt(4, campoChamada.getDecimais());
+		cs.setInt(5, campoChamada.isOpcional() ? 1 : 0);
+		cs.setString(6, new Gson().toJson(campoChamada.pegaOpcoes()));
+		cs.registerOutParameter(7, Types.INTEGER);
 		cs.execute();
+		
+		campoChamada.setIdChamada(idChamada);
+		campoChamada.setId(cs.getInt(7));
 		c.close();
 	}
 
 	/**
 	 * Remove todos os campos de uma chamada
 	 */
-	private void removeCamposChamada(Connection c, int idCamposChamada) throws SQLException
+	private void removeCampos(Connection c, Chamada chamada) throws SQLException
 	{
-		CallableStatement cs = c.prepareCall("{call ChamadaRemoveCampos(?)}");
-		cs.setInt(1, idCamposChamada);
+		for(CampoChamada campoChamada: chamada.pegaCamposChamada())
+			removeCampo(c, campoChamada);
+	}
+	
+	/**
+	 * Remove um campo de uma chamada
+	 */
+	private void removeCampo(Connection c, CampoChamada campoChamada) throws SQLException
+	{
+		CallableStatement cs = c.prepareCall("{call CampoChamadaRemove(?)}");
+		cs.setInt(1, campoChamada.getId());
 		cs.execute();
 		c.close();
+	}
+	
+	/**
+	 * Atualiza um campo de uma chamada
+	 */
+	public boolean atualizaCampoChamada(CampoChamada campoChamada)
+	{
+		Connection c = getConnection();
+		
+		if (c == null)
+			return false;
+		
+		try
+		{
+			CallableStatement cs = c.prepareCall("{call CampoChamadaAtualiza(?, ?, ?, ?, ?, ?)}");
+			cs.setInt(1, campoChamada.getId());
+			cs.setString(2, campoChamada.getTitulo());
+			cs.setInt(3, campoChamada.getTipo());
+			cs.setInt(4, campoChamada.getDecimais());
+			cs.setInt(5, campoChamada.isOpcional() ? 1 : 0);
+			cs.setString(6, new Gson().toJson(campoChamada.pegaOpcoes()));
+			cs.execute();
+
+			c.close();
+			return true;
+
+		} catch (SQLException e)
+		{
+			log("ChamadaDAO.atualiza: " + e.getMessage());
+			return false;
+		}
 	}
 }

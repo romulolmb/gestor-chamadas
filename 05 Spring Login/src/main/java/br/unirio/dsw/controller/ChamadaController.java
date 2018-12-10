@@ -27,7 +27,7 @@ public class ChamadaController {
 	private ChamadaDAO chamadaDAO;
 	
 	@ResponseBody
-	@RequestMapping(value = "/chamadas", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/listaChamadas", method = RequestMethod.GET, produces = "application/json")
 	public String lista(@ModelAttribute("page") int pagina, @ModelAttribute("size") int tamanho, @ModelAttribute("sigla") String filtroSigla, @ModelAttribute("nome") String filtroNome)
 	{
 		List<Chamada> chamadas = chamadaDAO.lista(pagina, tamanho, filtroSigla, filtroNome);
