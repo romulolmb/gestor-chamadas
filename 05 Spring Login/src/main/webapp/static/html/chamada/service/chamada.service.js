@@ -1,13 +1,13 @@
 app.service("chamadaService", function () {
 	var self = this;
 
-	self.unidade = null;
+	self.chamada = null;
 
     return {
-        getUnidade: function () {
+        getChamada: function () {
             return self.chamada;
         },
-        setUnidade: function (chamada) {
+        setChamada: function (chamada) {
             self.chamada = chamada;
         }
     };

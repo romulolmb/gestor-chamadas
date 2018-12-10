@@ -27,7 +27,7 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 	 * Lista as chamadas
 	 */
 	var lista = function(page, size, filtros) {
-		return $http.get("cd?page=" + page + "&size=" + size + "&nome=" + (filtros.nome || "") + "&sigla=" + (filtros.sigla || ""));
+		return $http.get("listaChamadas?page=" + page + "&size=" + size + "&nome=" + (filtros.nome || "") + "&sigla=" + (filtros.sigla || "") + "&idGestor=2");
 	}
 	
 	/**

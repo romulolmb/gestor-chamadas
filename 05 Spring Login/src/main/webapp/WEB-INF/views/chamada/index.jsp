@@ -41,9 +41,9 @@
   
   <!-- Modulos -->
   <script src="static/components/seletor-usuarios/seletor-usuarios.js"></script>
-  <script src="static/html/unidade/service/unidade.service.js"></script>
-  <script src="static/html/unidade/lista/lista.controller.js"></script>
-  <script src="static/html/unidade/form/form.controller.js"></script>
+  <script src="static/html/chamada/service/chamada.service.js"></script>
+  <script src="static/html/chamada/lista/lista.controller.js"></script>
+  <script src="static/html/chamada/form/form.controller.js"></script>
 
   </body>
 </html>
