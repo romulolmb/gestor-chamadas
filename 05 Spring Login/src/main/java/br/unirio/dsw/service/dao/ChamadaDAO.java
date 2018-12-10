@@ -9,6 +9,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,6 +24,7 @@ import br.unirio.dsw.utils.DateUtils;
  * 
  * @author Mlandrini
  */
+@Service("chamadaDAO") 
 public class ChamadaDAO extends AbstractDAO
 {	
 	/**
