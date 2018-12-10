@@ -136,6 +136,46 @@ public class UnidadeDAO extends AbstractDAO
 	}
 	
 	/**
+	 * Lista unidades por gestor
+	 * @param idGestor
+	 * @return
+	 */
+	public List<Unidade> listaPorGestor(int idGestor)
+	{
+		String SQL = "SELECT un.* " +
+				 "FROM UnidadeFuncional un " +
+				 "INNER JOIN GestorUnidadeFuncional g ON g.idUnidade = un.id " +
+				 "WHERE g.idGestor = ? ;";
+	
+	Connection c = getConnection();
+	List<Unidade> unidades = new ArrayList<Unidade>();
+	
+	if (c == null)
+		return unidades;
+	
+	try
+	{
+		PreparedStatement ps = c.prepareStatement(SQL);
+		ps.setInt(1, idGestor);
+		ResultSet rs = ps.executeQuery();
+		
+		while (rs.next())
+		{
+			Unidade unidade = carrega(rs);
+			unidades.add(unidade);
+		}
+		
+		c.close();
+		return unidades;
+
+	} catch (SQLException e)
+	{
+		log("UnidadeDAO.listaPorGestor: " + e.getMessage());
+		return unidades;
+	}
+	}
+	
+	/**
 	 * Adiciona uma unidade no sistema
 	 */
 	public boolean cria(Unidade unidade)
