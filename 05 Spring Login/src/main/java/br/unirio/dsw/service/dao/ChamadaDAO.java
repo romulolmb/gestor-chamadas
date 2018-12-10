@@ -24,7 +24,7 @@ import br.unirio.dsw.utils.DateUtils;
  * 
  * @author Mlandrini
  */
-@Service("chamadaDAO")
+@Service("chamadaDAO") 
 public class ChamadaDAO extends AbstractDAO
 {	
 	/**

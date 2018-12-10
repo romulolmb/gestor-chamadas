@@ -28,11 +28,11 @@
   app.config(function($routeProvider) {
 	$routeProvider
 	    .when("/lista", {
-	        templateUrl: "static/html/unidade/lista/lista.html",
+	        templateUrl: "static/html/chamada/lista/lista.html",
 	        controller: "listaController as ctrl"
 	    })
 	    .when("/form", {
-	        templateUrl: "static/html/unidade/form/form.html",
+	        templateUrl: "static/html/chamada/form/form.html",
 	        controller: "formController as ctrl"
 	    })
 	    .otherwise("/lista");
