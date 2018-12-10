@@ -20,4 +20,13 @@ public class BaseController
 	{
 		return "unidade/index";
 	}
+	
+	/**
+	 * Ação que redireciona o usuário para a página de edição de unidades
+	 */
+	@RequestMapping(value = "/chamadas", method = RequestMethod.GET)
+	public String mostraChamadas()
+	{
+		return "chamada/index";
+	}
 }

@@ -9,6 +9,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import br.unirio.dsw.model.chamada.CampoChamada;
 import br.unirio.dsw.model.chamada.Chamada;
 import br.unirio.dsw.model.unidade.GestorUnidade;
@@ -19,6 +21,7 @@ import br.unirio.dsw.utils.DateUtils;
  * 
  * @author Mlandrini
  */
+@Service("chamadaDAO")
 public class ChamadaDAO extends AbstractDAO
 {	
 	/**
