@@ -88,6 +88,7 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 			return lista(params.page() - 1, params.count(), self.filtros).then(function (data) {
 				if(data.data.TotalRecordCount == 0) {
 					self.noSite = true;
+					self.unidades = data.data.unidades;
 				}
 				else {
 					params.total(data.data.TotalRecordCount);
