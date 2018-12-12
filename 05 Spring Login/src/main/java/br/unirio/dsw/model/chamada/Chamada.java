@@ -2,6 +2,7 @@ package br.unirio.dsw.model.chamada;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.joda.time.DateTime;
 
@@ -13,7 +14,7 @@ import lombok.Setter;
 public class Chamada {
 	
 	private @Setter @Getter int id;
-	private @Setter @Getter DateTime dataRegistro; 
+	private @Setter @Getter DateTime dataRegistro;
 	private @Setter @Getter DateTime dataAtualizacao;
 	private @Setter @Getter int idUnidade;
 	private @Setter @Getter String nome; 
@@ -66,10 +67,11 @@ public class Chamada {
 	}
 	
 	/**
-	 * Retorna todos os gestores da unidade
+	 * Retorna todos os campos da chamada
 	 */
 	public Iterable<CampoChamada> pegaCamposChamada()
 	{
+		if (camposChamada == null) return Collections.emptyList();
 		return camposChamada;
 	}
 	

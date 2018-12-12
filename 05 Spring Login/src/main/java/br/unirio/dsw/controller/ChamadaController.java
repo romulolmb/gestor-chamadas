@@ -1,10 +1,12 @@
 package br.unirio.dsw.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,7 @@ import com.google.gson.JsonObject;
 
 import br.unirio.dsw.model.chamada.Chamada;
 import br.unirio.dsw.model.unidade.Unidade;
+import br.unirio.dsw.model.usuario.Usuario;
 import br.unirio.dsw.service.dao.ChamadaDAO;
 import br.unirio.dsw.service.dao.UnidadeDAO;
 import br.unirio.dsw.utils.JsonUtils;
@@ -37,10 +40,11 @@ public class ChamadaController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/listaChamadas", method = RequestMethod.GET, produces = "application/json")
-	public String lista(@ModelAttribute("page") int pagina, @ModelAttribute("size") int tamanho, @ModelAttribute("sigla") String filtroSigla, @ModelAttribute("nome") String filtroNome, @ModelAttribute("idGestor") int idGestor)
+	public String lista(@ModelAttribute("page") int pagina, @ModelAttribute("size") int tamanho, @ModelAttribute("sigla") String filtroSigla, @ModelAttribute("nome") String filtroNome, Principal principal)
 	{
 		List<Chamada> chamadas = chamadaDAO.lista(pagina, tamanho, filtroSigla, filtroNome);
-		List<Unidade> unidades = unidadeDAO.listaPorGestor(idGestor);
+		Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<Unidade> unidades = unidadeDAO.listaPorGestor(usuario.getId());
 		int total = chamadaDAO.conta(filtroSigla, filtroNome);
 
 		Gson gson = new Gson();
@@ -57,7 +61,7 @@ public class ChamadaController {
 		root.addProperty("Result", "OK");
 		root.addProperty("TotalRecordCount", total);
 		root.add("Records", jsonChamadas);
-		root.add("Unidades", jsonUnidades);
+		root.add("unidades", jsonUnidades);
 		return root.toString();
 	}
 

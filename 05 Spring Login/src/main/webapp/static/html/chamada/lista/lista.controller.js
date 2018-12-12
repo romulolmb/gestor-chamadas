@@ -27,7 +27,7 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 	 * Lista as chamadas
 	 */
 	var lista = function(page, size, filtros) {
-		return $http.get("listaChamadas?page=" + page + "&size=" + size + "&nome=" + (filtros.nome || "") + "&sigla=" + (filtros.sigla || "") + "&idGestor=2");
+		return $http.get("listaChamadas?page=" + page + "&size=" + size + "&nome=" + (filtros.nome || "") + "&sigla=" + (filtros.sigla || ""));
 	}
 	
 	/**
@@ -47,7 +47,7 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 	 * Cria uma nova chamada
 	 */
 	self.nova = function() {
-		var chamada = { id: -1, sigla: "", nome: "", camposChamada: [], idUnidade: 5 };
+		var chamada = { id: -1, sigla: "", nome: "", camposChamada: [], idUnidade: "", unidades: self.unidades };
 		chamadaService.setChamada(chamada);
         $location.path('/form');
 	}
@@ -59,6 +59,9 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 		var chamada = angular.copy(item);
 		chamada.dataAbertura = new Date(chamada.dataAbertura.iMillis);
 		chamada.dataEncerramento = new Date(chamada.dataEncerramento.iMillis);
+		chamada.dataAtualizacao = "";
+		chamada.dataRegistro = "";
+		chamada.unidades = self.unidades
 		chamadaService.setChamada (chamada);
         $location.path('/form');
 	}
@@ -67,7 +70,7 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 	 * Remove a chamada selecionada
 	 */
 	self.remove = function(id) {
-		$http.delete("listaChamadas/" + id).then(function(data){
+		$http.delete("chamada/" + id).then(function(data){
 			if (data.data.result == "OK"){
 				M.toast({html: "Chamada deletada com sucesso!"});
 				atualizaLista();
@@ -88,6 +91,7 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 				}
 				else {
 					params.total(data.data.TotalRecordCount);
+					self.unidades = data.data.unidades;
 					self.noSite = false;
 					return data = data.data.Records;
 				}

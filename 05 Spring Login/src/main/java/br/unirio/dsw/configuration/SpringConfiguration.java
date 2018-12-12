@@ -30,7 +30,7 @@ import br.unirio.dsw.service.message.ExposedResourceMessageBundleSource;
 @PropertySource("classpath:configuration.properties")
 @Import({ SecurityConfiguration.class })
 public class SpringConfiguration extends WebMvcConfigurerAdapter
-{
+{	
 	/**
 	 * Configura a classe que resolve o acesso aos arquivos JSP
 	 */

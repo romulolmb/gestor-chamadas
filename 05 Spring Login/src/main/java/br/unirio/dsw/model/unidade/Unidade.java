@@ -1,6 +1,7 @@
 package br.unirio.dsw.model.unidade;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import lombok.Getter;
@@ -50,6 +51,7 @@ public class Unidade
 	 */
 	public Iterable<GestorUnidade> pegaGestores()
 	{
+		if (gestores == null) return Collections.emptyList();
 		return gestores;
 	}
 	

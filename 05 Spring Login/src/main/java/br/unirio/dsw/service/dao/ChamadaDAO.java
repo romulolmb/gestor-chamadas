@@ -212,7 +212,7 @@ public class ChamadaDAO extends AbstractDAO
 			cs.execute();
 			
 			chamada.setId(cs.getInt(6));
-			adicionaCampos(c, chamada);
+			adicionaCampos(chamada);
 			
 			c.close();
 			return true;
@@ -240,12 +240,12 @@ public class ChamadaDAO extends AbstractDAO
 			cs.setInt(1, chamada.getId());
 			cs.setString(2, chamada.getNome());
 			cs.setString(3, chamada.getSigla());
-			cs.setString(4, chamada.getDataAbertura().toString());
-			cs.setString(5, chamada.getDataEncerramento().toString());
+			cs.setTimestamp(4, new Timestamp(chamada.getDataAbertura().getMillis()));
+			cs.setTimestamp(5, new Timestamp(chamada.getDataEncerramento().getMillis()));	
 			cs.execute();
 			
-			removeCampos(c, chamada);
-			adicionaCampos(c, chamada);
+			removeCampos(chamada);
+			adicionaCampos(chamada);
 
 			c.close();
 			return true;
@@ -310,17 +310,18 @@ public class ChamadaDAO extends AbstractDAO
 	/**
 	 * Adiciona os campos em uma chamada
 	 */
-	private void adicionaCampos(Connection c, Chamada chamada) throws SQLException
+	private void adicionaCampos(Chamada chamada) throws SQLException
 	{
 		for (CampoChamada campoChamada: chamada.pegaCamposChamada())
-			adicionaCampo(c, chamada.getId(), campoChamada);
+			adicionaCampo(chamada.getId(), campoChamada);
 	}
 
 	/**
 	 * Adiciona um campo em uma unidade
 	 */
-	private void adicionaCampo(Connection c, int idChamada, CampoChamada campoChamada) throws SQLException
+	private void adicionaCampo(int idChamada, CampoChamada campoChamada) throws SQLException
 	{
+		Connection c = getConnection();
 		CallableStatement cs = c.prepareCall("{call CampoChamadaInsere(?, ?, ?, ?, ?, ?, ?)}");
 		cs.setInt(1, idChamada);
 		cs.setString(2, campoChamada.getTitulo());
@@ -339,17 +340,18 @@ public class ChamadaDAO extends AbstractDAO
 	/**
 	 * Remove todos os campos de uma chamada
 	 */
-	private void removeCampos(Connection c, Chamada chamada) throws SQLException
+	private void removeCampos(Chamada chamada) throws SQLException
 	{
 		for(CampoChamada campoChamada: chamada.pegaCamposChamada())
-			removeCampo(c, campoChamada);
+			removeCampo(campoChamada);
 	}
 	
 	/**
 	 * Remove um campo de uma chamada
 	 */
-	private void removeCampo(Connection c, CampoChamada campoChamada) throws SQLException
+	private void removeCampo(CampoChamada campoChamada) throws SQLException
 	{
+		Connection c = getConnection();
 		CallableStatement cs = c.prepareCall("{call CampoChamadaRemove(?)}");
 		cs.setInt(1, campoChamada.getId());
 		cs.execute();
