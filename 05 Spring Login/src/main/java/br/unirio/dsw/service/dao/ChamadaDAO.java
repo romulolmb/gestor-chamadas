@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -205,8 +206,8 @@ public class ChamadaDAO extends AbstractDAO
 			cs.setInt(1, chamada.getIdUnidade());
 			cs.setString(2, chamada.getNome());
 			cs.setString(3, chamada.getSigla());
-			cs.setString(4, chamada.getDataAbertura().toString());
-			cs.setString(5, chamada.getDataEncerramento().toString());
+			cs.setTimestamp(4, new Timestamp(chamada.getDataAbertura().getMillis()));
+			cs.setTimestamp(5, new Timestamp(chamada.getDataEncerramento().getMillis()));
 			cs.registerOutParameter(6, Types.INTEGER);
 			cs.execute();
 			

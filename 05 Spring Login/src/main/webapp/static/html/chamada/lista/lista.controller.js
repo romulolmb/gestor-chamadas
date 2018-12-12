@@ -31,10 +31,23 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 	}
 	
 	/**
+	 * Formata a data para dd/MM/yyyy
+	 */
+	self.formataData = function(data) {
+		var dataConvertida = new Date(data.iMillis);
+		var dia = dataConvertida.getDate().toString();
+		var mes = (dataConvertida.getMonth()+1).toString();
+		var ano = dataConvertida.getFullYear().toString();
+		var pad = "00";
+		var novaData = pad.substring(0, pad.length - dia.length) + dia + "/" + pad.substring(0, pad.length - mes.length) + mes + "/" + ano; 
+		return novaData
+	}
+	
+	/**
 	 * Cria uma nova chamada
 	 */
 	self.nova = function() {
-		var chamada = { id: -1, sigla: "", nome: "", camposChamada: [] };
+		var chamada = { id: -1, sigla: "", nome: "", camposChamada: [], idUnidade: 5 };
 		chamadaService.setChamada(chamada);
         $location.path('/form');
 	}
@@ -44,6 +57,8 @@ app.controller("listaController", function ($log, $location, $http, NgTableParam
 	 */
 	self.edita = function(item) {
 		var chamada = angular.copy(item);
+		chamada.dataAbertura = new Date(chamada.dataAbertura.iMillis);
+		chamada.dataEncerramento = new Date(chamada.dataEncerramento.iMillis);
 		chamadaService.setChamada (chamada);
         $location.path('/form');
 	}

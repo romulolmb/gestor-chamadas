@@ -43,8 +43,8 @@
 					
 					<div class="col s8 m8 l8">
 						<div class="input-field">
-							<input type="date" data-ng-change='ctrl.atualizaFiltro()' data-ng-model="ctrl.filtros.dataFechamento" id="filtro-dataFechamento">
-							<label for="filtro-nome">Data de fechamento:</label>
+							<input type="date" data-ng-change='ctrl.atualizaFiltro()' data-ng-model="ctrl.filtros.dataEncerramento" id="filtro-dataEncerramento">
+							<label for="filtro-nome">Data de encerramento:</label>
 						</div>
 					</div>
 
@@ -65,10 +65,10 @@
 				           		{{ item.nome }}
 				           	</td>
 				           	<td class="text-left" data-header-class="'text-left'" data-title="'DataAbertura'">
-				           		{{ item.dataAbertura}}
+				           		{{ ctrl.formataData(item.dataAbertura) }}
 				           	</td>
-				           	<td class="text-left" data-header-class="'text-left'" data-title="'DataFechamento'">
-				           		{{ item.dataFechamento }}
+				           	<td class="text-left" data-header-class="'text-left'" data-title="'DataEncerramento'">
+				           		{{ ctrl.formataData(item.dataEncerramento) }}
 				           	</td>
 							<td class="right">
 								<button class="waves-effect waves-light btn customAction" data-ng-click="ctrl.edita(item)">

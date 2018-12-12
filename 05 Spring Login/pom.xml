@@ -7,6 +7,14 @@
 	<packaging>war</packaging>
 	<version>1.0.0</version>
 	<name>Sistema de Gestor de Chamadas</name>
+	
+	<repositories>
+	    <repository>
+	        <id>mvnrepository</id>
+	        <name>Maven Repository MVN</name>
+	        <url>https://mvnrepository.com/artifact/</url>
+	    </repository>
+	</repositories>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,11 +51,17 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${springframework.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
 		</dependency>
+		<dependency>
+	        <groupId>com.fasterxml.jackson.datatype</groupId>
+	        <artifactId>jackson-datatype-joda</artifactId>
+	        <version>${jackson.version}</version>
+	    </dependency>
 
 		<!-- Spring Security -->
 		<dependency>

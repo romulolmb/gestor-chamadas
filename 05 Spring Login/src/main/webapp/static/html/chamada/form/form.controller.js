@@ -4,7 +4,7 @@ app.controller("formController", function ($log, $location, $http, NgTableParams
 	/**
 	 * Filtros
 	 */
-	self.chamada = chamadaService.getChamada();
+	self.chamada = chamadaService.getChamada(); 
 	
 	if (!self.chamada) {
         $location.path('/listaChamadas');

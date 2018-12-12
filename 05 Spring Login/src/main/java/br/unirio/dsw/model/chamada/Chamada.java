@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +18,9 @@ public class Chamada {
 	private @Setter @Getter int idUnidade;
 	private @Setter @Getter String nome; 
 	private @Setter @Getter String sigla;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	private @Setter @Getter DateTime dataAbertura;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	private @Setter @Getter DateTime dataEncerramento;
 	private @Setter @Getter boolean cancelada; 
 	private @Setter @Getter boolean encerrada;
