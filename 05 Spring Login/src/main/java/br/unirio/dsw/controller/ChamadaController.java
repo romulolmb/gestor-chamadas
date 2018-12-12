@@ -83,6 +83,16 @@ public class ChamadaController {
 		
 		if (chamada.getNome().length() > 80)
 			return JsonUtils.ajaxError("O nome não pode ter mais do que 80 caracteres.");
+		
+		if (chamada.getId() != -1) {
+			Chamada oldChamada = chamadaDAO.carregaChamadaId(chamada.getId());
+			if (oldChamada.getDataAbertura().isBeforeNow())
+				return JsonUtils.ajaxError("Não é possível alterar uma chamada aberta."); 
+		}
+		
+		if (!(chamada.getIdUnidade() >= 1)) {
+			return JsonUtils.ajaxError("Unidade não pode ficar vazia.");
+		}
  
 		// TODO; testar os gestores
 		

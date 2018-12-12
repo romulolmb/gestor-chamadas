@@ -155,7 +155,8 @@ public class ChamadaDAO extends AbstractDAO
 		String SQL = "SELECT * " +
 					 "FROM Chamada " + 
 					 "WHERE nome like ? " +
-					 "AND sigla like ? " + 
+					 "AND sigla like ? " +
+					 "AND cancelada != 1 " + //Não busca as chamadas canceladas
 					 "LIMIT ? OFFSET ? ";
 		
 		Connection c = getConnection();
@@ -236,12 +237,13 @@ public class ChamadaDAO extends AbstractDAO
 		
 		try
 		{
-			CallableStatement cs = c.prepareCall("{call ChamadaAtualiza(?, ?, ?, ?, ?)}");
-			cs.setInt(1, chamada.getId());
-			cs.setString(2, chamada.getNome());
-			cs.setString(3, chamada.getSigla());
-			cs.setTimestamp(4, new Timestamp(chamada.getDataAbertura().getMillis()));
-			cs.setTimestamp(5, new Timestamp(chamada.getDataEncerramento().getMillis()));	
+			CallableStatement cs = c.prepareCall("{call ChamadaAtualiza(?, ?, ?, ?, ?, ?)}");
+			cs.setInt(1, chamada.getIdUnidade());
+			cs.setInt(2, chamada.getId());			
+			cs.setString(3, chamada.getNome());
+			cs.setString(4, chamada.getSigla());
+			cs.setTimestamp(5, new Timestamp(chamada.getDataAbertura().getMillis()));
+			cs.setTimestamp(6, new Timestamp(chamada.getDataEncerramento().getMillis()));	
 			cs.execute();
 			
 			removeCampos(chamada);

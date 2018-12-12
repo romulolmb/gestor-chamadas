@@ -19,10 +19,11 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS ChamadaAtualiza;
 DELIMITER //
-CREATE PROCEDURE ChamadaAtualiza(vIdChamada INT, vNome VARCHAR(80), vSigla VARCHAR(10), vDataAbertura TIMESTAMP, vDataEncerramento TIMESTAMP)
+CREATE PROCEDURE ChamadaAtualiza(vIdUnidade INT, vIdChamada INT, vNome VARCHAR(80), vSigla VARCHAR(10), vDataAbertura TIMESTAMP, vDataEncerramento TIMESTAMP)
 BEGIN
     UPDATE Chamada
 	SET nome = vNome,
+	idUnidade = vIdUnidade,
     sigla = vSigla,
     dataAbertura = vDataAbertura,
     dataEncerramento = vDataEncerramento, 
